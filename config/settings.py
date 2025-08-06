@@ -23,7 +23,7 @@ load_dotenv(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-68deonb0(5lk(o%^xp@)$1b1bzrejs%sg9g$5vy)y#(01#$9%&)")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "qcfs7m@ke8eq=qs(l1m@e74^x$t=)kw9f37g@+z1(vj+41z@en")
 # "django-insecure-68deonb0(5lk(o%^xp@)$1b1bzrejs%sg9g$5vy)y#(01#$9%&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -147,3 +147,6 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "users.User"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
