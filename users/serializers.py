@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from users.models import Follow
 
 User = get_user_model()
 
@@ -9,7 +10,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("id", "username", "email", "avatar")
         read_only_fields = ("id",)
-
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -30,6 +30,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        password = validated_data.pop("password")
         validated_data.pop("password2")
-        user = User.objects.create(**validated_data)
+        user = User(**validated_data)
+        user.set_password(password)  # hashing a password
+        user.save()
         return user
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    follower = serializers.StringRelatedField(read_only=True)
+    following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+
+    class Meta:
+        model = Follow
+        fields = ("id", "follower", "following", "created_at")
