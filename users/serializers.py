@@ -5,19 +5,25 @@ from users.models import Follow
 
 User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "username", "email", "avatar")
         read_only_fields = ("id",)
 
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         required=True,
-        validators=[validate_password]
+        validators=[validate_password],
+        style={"input_type": "password"}
     )
-    password2 = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={"input_type": "password"}
+    )
 
     class Meta:
         model = User
@@ -33,15 +39,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         validated_data.pop("password2")
         user = User(**validated_data)
-        user.set_password(password)  # hashing a password
+        user.set_password(password)
         user.save()
         return user
 
 
 class FollowSerializer(serializers.ModelSerializer):
     follower = serializers.StringRelatedField(read_only=True)
-    following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    following = serializers.SlugRelatedField(
+        slug_field="username",
+        queryset=User.objects.all()
+    )
 
     class Meta:
         model = Follow
-        fields = ("id", "follower", "following", "created_at")
+        fields = ["id", "follower", "following", "created_at"]
