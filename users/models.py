@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     avatar = models.ImageField(
@@ -20,12 +21,12 @@ class User(AbstractUser):
 class Follow(models.Model):
     follower = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="following",
+        related_name="followers",
         on_delete=models.CASCADE,
     )
     following = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="followers",
+        related_name="followings",
         on_delete=models.CASCADE,
     )
     created_at = models.DateTimeField(auto_now_add=True)
